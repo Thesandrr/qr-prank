@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>System Check</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+.center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+}
+
+#start { display: block; }
+#loading, #scare, #sorry { display: none; }
+
+#scare img {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* FLASH PUTIH (dibatasi) */
+.flash-white {
+    animation: whiteFlash 0.03s infinite;
+}
+@keyframes whiteFlash {
+    0% { background: white; }
+    50% { background: black; }
+    100% { background: white; }
+}
+
+/* SHAKE */
+.shake {
+    animation: shake 0.05s infinite;
+}
+@keyframes shake {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(-12px,6px); }
+    50% { transform: translate(12px,-6px); }
+    75% { transform: translate(-6px,-12px); }
+    100% { transform: translate(0,0); }
+}
+
+/* GLITCH */
+.glitch {
+    animation: glitch 0.8s infinite;
+}
+@keyframes glitch {
+    0% { filter: hue-rotate(0deg) contrast(200%); }
+    50% { filter: hue-rotate(180deg) contrast(300%); }
+    100% { filter: hue-rotate(360deg) contrast(200%); }
+}
+</style>
+</head>
+
+<body id="body">
+
+<!-- START (WAJIB untuk fullscreen) -->
+<div id="start" class="center">
+    <h2>🔒 Tap to Continue</h2>
+    <p>System verification</p>
+</div>
+
+<div id="loading" class="center">
+    <h2>📶 Connecting to WiFi...</h2>
+    <p>Please wait</p>
+</div>
+
+<div id="scare">
+    <img src="setandewa.jpg">
+</div>
+
+<div id="sorry" class="center">
+    <h1>MUKA LU KE FEFEK</h1>
+    <p>MINTA HOSPOT? JILATIN KONTOL GW  -sandrr</p>
+</div>
+
+<audio id="sound" src="scream.mp3"></audio>
+
+<script>
+const body = document.getElementById("body");
+const start = document.getElementById("start");
+const loading = document.getElementById("loading");
+const scare = document.getElementById("scare");
+const sorry = document.getElementById("sorry");
+const sound = document.getElementById("sound");
+
+sound.volume = 1.0;
+
+/* 🔒 KUNCI TOMBOL BACK */
+history.pushState(null, null, location.href);
+window.onpopstate = () => {
+    history.pushState(null, null, location.href);
+};
+
+/* FULLSCREEN (harus via tap) */
+start.addEventListener("click", () => {
+    if (body.requestFullscreen) body.requestFullscreen();
+    start.style.display = "none";
+    loading.style.display = "block";
+
+    // 2 DETIK LOADING
+    setTimeout(() => {
+        loading.style.display = "none";
+        scare.style.display = "block";
+        body.classList.add("flash-white", "shake");
+        scare.classList.add("glitch");
+        sound.play();
+    }, 2000);
+
+    // 35 DETIK HORROR
+    setTimeout(() => {
+        body.classList.remove("flash-white", "shake");
+        scare.classList.remove("glitch");
+        scare.style.display = "none";
+        sorry.style.display = "block";
+    }, 7000);
+});
+</script>
+
+</body>
+</html>
